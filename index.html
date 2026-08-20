@@ -88,6 +88,25 @@ Nhất niệm phàm trần · Nhất niệm thành tiên
 </header>
 
 <main>
+  <div class="card" id="loginBox">
+  <h2>🔐 Đăng Nhập</h2>
+
+  <input
+    id="email"
+    type="email"
+    placeholder="Email"
+  >
+
+  <input
+    id="password"
+    type="password"
+    placeholder="Mật khẩu"
+  >
+
+  <button id="loginBtn">Đăng nhập</button>
+
+  <p id="loginMessage"></p>
+  </div>
 
   <div class="card">
     <h2>📖 Tàng Kinh Các</h2>
@@ -118,7 +137,34 @@ Nhất niệm phàm trần · Nhất niệm thành tiên
   const supabaseClient = supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
-  );
+  ); 
+  const loginBtn = document.getElementById("loginBtn");
+const loginMessage = document.getElementById("loginMessage");
+
+loginBtn.addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    loginMessage.textContent = "⚠️ Hãy nhập email và mật khẩu.";
+    return;
+  }
+
+  loginMessage.textContent = "Đang đăng nhập...";
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    loginMessage.textContent = "❌ Đăng nhập thất bại: " + error.message;
+    return;
+  }
+
+  loginMessage.textContent = "✅ Đăng nhập thành công!";
+  console.log("User:", data.user);
+});
 </script>
 
 </body>
